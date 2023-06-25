@@ -40,6 +40,30 @@ void RGWCORSRule::dump_origins() {
   }
 }
 
+void RGWCORSRule::dump(Formatter *f) const
+{
+  f->open_object_section("CORSRule");
+  f->dump_string("ID", id);
+  f->dump_unsigned("MaxAgeSeconds", max_age);
+  f->dump_unsigned("AllowedMethod", allowed_methods);
+  f->open_array_section("AllowedOrigin");
+  for (auto& origin : allowed_origins) {
+    f->dump_string("Origin", origin);
+  }
+  f->close_section();
+  f->open_array_section("AllowedHeader");
+  for (auto& header : allowed_hdrs) {
+    f->dump_string("Header", header);
+  }
+  f->close_section();
+  f->open_array_section("ExposeHeader");
+  for (auto& header : exposable_hdrs) {
+    f->dump_string("Header", header);
+  }
+  f->close_section();
+  f->close_section();
+}
+
 void RGWCORSRule::erase_origin_if_present(string& origin, bool *rule_empty) {
   set<string>::iterator it = allowed_origins.find(origin);
   if (!rule_empty)
@@ -51,6 +75,20 @@ void RGWCORSRule::erase_origin_if_present(string& origin, bool *rule_empty) {
     allowed_origins.erase(it);
     *rule_empty = (allowed_origins.empty());
   }
+}
+
+void RGWCORSRule::generate_test_instances(list<RGWCORSRule*>& o)
+{
+  o.push_back(new RGWCORSRule);
+  o.push_back(new RGWCORSRule);
+  o.back()->id = "test";
+  o.back()->max_age = 100;
+  o.back()->allowed_methods = RGW_CORS_GET | RGW_CORS_PUT;
+  o.back()->allowed_origins.insert("http://origin1");
+  o.back()->allowed_origins.insert("http://origin2");
+  o.back()->allowed_hdrs.insert("accept-encoding");
+  o.back()->allowed_hdrs.insert("accept-language");
+  o.back()->exposable_hdrs.push_back("x-rgw-something");
 }
 
 /*

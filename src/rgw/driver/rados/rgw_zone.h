@@ -94,6 +94,7 @@ public:
 
   void dump(Formatter *f) const;
   void decode_json(JSONObj *obj);
+  //static void generate_test_instances(std::list<RGWSystemMetaObj*>& o);
 };
 WRITE_CLASS_ENCODER(RGWSystemMetaObj)
 

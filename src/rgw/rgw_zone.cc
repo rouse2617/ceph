@@ -770,6 +770,17 @@ void RGWZonePlacementInfo::dump(Formatter *f) const
    * rather not clutter the output */
 }
 
+void RGWZonePlacementInfo::generate_test_instances(list<RGWZonePlacementInfo*>& o)
+{
+  o.push_back(new RGWZonePlacementInfo);
+  o.push_back(new RGWZonePlacementInfo);
+  o.back()->index_pool = rgw_pool("rgw.buckets.index");
+  
+  o.back()->data_extra_pool = rgw_pool("rgw.buckets.non-ec");
+  o.back()->index_type = rgw::BucketIndexType::Normal;
+  o.back()->inline_data = false;
+}
+
 void RGWZonePlacementInfo::decode_json(JSONObj *obj)
 {
   JSONDecoder::decode_json("index_pool", index_pool, obj);
@@ -807,6 +818,9 @@ void RGWSystemMetaObj::decode_json(JSONObj *obj)
   JSONDecoder::decode_json("id", id, obj);
   JSONDecoder::decode_json("name", name, obj);
 }
+
+//void RGWSystemMetaObj::generate_test_instances(list<RGWSystemMetaObj*>& o)
+//{ }
 
 int RGWSystemMetaObj::read_default(const DoutPrefixProvider *dpp, 
                                    RGWDefaultSystemMetaObjInfo& default_info,
@@ -858,6 +872,11 @@ void RGWZoneStorageClasses::dump(Formatter *f) const
   for (auto& i : m) {
     encode_json(i.first.c_str(), i.second, f);
   }
+}
+
+void RGWZoneStorageClasses::generate_test_instances(list<RGWZoneStorageClasses*>& o)
+{
+  o.push_back(new RGWZoneStorageClasses);
 }
 
 void RGWZoneStorageClasses::decode_json(JSONObj *obj)
@@ -913,6 +932,14 @@ void RGWZoneStorageClass::dump(Formatter *f) const
   if (compression_type) {
     encode_json("compression_type", compression_type.get(), f);
   }
+}
+
+void RGWZoneStorageClass::generate_test_instances(list<RGWZoneStorageClass*>& o)
+{
+  o.push_back(new RGWZoneStorageClass);
+  o.push_back(new RGWZoneStorageClass);
+  o.back()->data_pool = rgw_pool("pool1");
+  o.back()->compression_type = "zlib";
 }
 
 void RGWZoneStorageClass::decode_json(JSONObj *obj)
