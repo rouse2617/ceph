@@ -29,6 +29,18 @@ struct cls_2pc_reservation
     decode(timestamp, bl);
     DECODE_FINISH(bl);
   }
+
+  void dump(ceph::Formatter *f) const {
+    f->dump_unsigned("size", size);
+    f->dump_stream("timestamp") << timestamp;
+  }
+
+  static void generate_test_instances(std::list<cls_2pc_reservation*>& ls) {
+    ls.push_back(new cls_2pc_reservation);
+    ls.push_back(new cls_2pc_reservation);
+    ls.back()->size = 123;
+    ls.back()->timestamp = ceph::coarse_real_clock::now();
+  }
 };
 WRITE_CLASS_ENCODER(cls_2pc_reservation)
 
@@ -57,6 +69,29 @@ struct cls_2pc_urgent_data
     decode(reservations, bl);
     decode(has_xattrs, bl);
     DECODE_FINISH(bl);
+  }
+
+  void dump(ceph::Formatter *f) const {
+    f->dump_unsigned("reserved_size", reserved_size);
+    f->dump_unsigned("last_id", last_id);
+    f->open_array_section("reservations");
+    for (auto& [id, res] : reservations) {
+      f->open_object_section("reservation");
+      f->dump_unsigned("id", id);
+      res.dump(f);
+      f->close_section();
+    }
+    f->close_section();
+    f->dump_bool("has_xattrs", has_xattrs);
+  }
+
+  static void generate_test_instances(std::list<cls_2pc_urgent_data*>& ls) {
+    ls.push_back(new cls_2pc_urgent_data);
+    ls.push_back(new cls_2pc_urgent_data);
+    ls.back()->reserved_size = 123;
+    ls.back()->last_id = 456;
+    ls.back()->reservations[789] = cls_2pc_reservation(123, ceph::coarse_real_clock::now());
+    ls.back()->has_xattrs = true;
   }
 };
 WRITE_CLASS_ENCODER(cls_2pc_urgent_data)

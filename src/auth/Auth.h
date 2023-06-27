@@ -95,6 +95,18 @@ struct AuthCapsInfo {
     allow_all = (bool)a;
     decode(caps, bl);
   }
+  void dump(ceph::Formatter *f) const {
+    f->dump_bool("allow_all", allow_all);
+    f->dump_stream("caps") << caps;
+  }
+  static void generate_test_instances(std::list<AuthCapsInfo*>& ls) {
+    ls.push_back(new AuthCapsInfo);
+    ls.push_back(new AuthCapsInfo);
+    ls.back()->allow_all = true;
+    ls.push_back(new AuthCapsInfo);
+    ls.back()->caps.append("foo");
+    ls.back()->caps.append("bar");
+  }
 };
 WRITE_CLASS_ENCODER(AuthCapsInfo)
 
@@ -146,6 +158,15 @@ struct AuthTicket {
     decode(expires, bl);
     decode(caps, bl);
     decode(flags, bl);
+  }
+  void dump(ceph::Formatter *f) const {
+    f->dump_stream("name") << name;
+    f->dump_unsigned("global_id", global_id);
+    f->dump_stream("created") << created;
+    f->dump_stream("renew_after") << renew_after;
+    f->dump_stream("expires") << expires;
+    f->dump_stream("caps") << caps.caps;
+    f->dump_unsigned("flags", flags);
   }
 };
 WRITE_CLASS_ENCODER(AuthTicket)

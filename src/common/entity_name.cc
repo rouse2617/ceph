@@ -29,6 +29,25 @@ const std::array<EntityName::str_to_entity_type_t, 6> EntityName::STR_TO_ENTITY_
   { CEPH_ENTITY_TYPE_CLIENT, "client" },
 }};
 
+void EntityName::
+dump(ceph::Formatter *f) const
+{
+  f->dump_int("type", type);
+  f->dump_string("id", id);
+}
+
+void EntityName::
+generate_test_instances(std::list<EntityName*>& ls)
+{
+  ls.push_back(new EntityName);
+  ls.push_back(new EntityName);
+  ls.back()->set_type(CEPH_ENTITY_TYPE_OSD);
+  ls.back()->set_id("0");
+  ls.push_back(new EntityName);
+  ls.back()->set_type(CEPH_ENTITY_TYPE_MDS);
+  ls.back()->set_id("a");
+}
+
 const std::string& EntityName::
 to_str() const
 {

@@ -27,6 +27,9 @@ TYPE_FEATUREFUL(file_layout_t)
 #include "include/util.h"
 TYPE(ceph_data_stats)
 
+#include "include/object.h"
+TYPE(object_t)
+
 #include "common/bit_vector.hpp"
 TYPE(BitVector<2>)
 
@@ -76,6 +79,10 @@ TYPE(chunk_refs_t)
 TYPE(rados::cls::lock::locker_id_t)
 TYPE_FEATUREFUL(rados::cls::lock::locker_info_t)
 TYPE_FEATUREFUL(rados::cls::lock::lock_info_t)
+using namespace rados::cls::lock;
+TYPE(locker_id_t)
+TYPE_FEATUREFUL(locker_info_t)
+TYPE_FEATUREFUL(lock_info_t)
 
 #include "cls/lock/cls_lock_ops.h"
 TYPE(cls_lock_lock_op)
@@ -97,6 +104,44 @@ TYPE(obj_refcount)
 
 #include "cls/timeindex/cls_timeindex_types.h"
 TYPE(cls_timeindex_entry)
+
+#include "cls/timeindex/cls_timeindex_ops.h"
+TYPE(cls_timeindex_list_op)
+TYPE(cls_timeindex_list_ret)
+
+#include "cls/queue/cls_queue_types.h"
+TYPE(cls_queue_entry)
+TYPE(cls_queue_marker)
+TYPE(cls_queue_head)
+
+#include "cls/queue/cls_queue_ops.h"
+TYPE(cls_queue_get_capacity_ret)
+TYPE(cls_queue_remove_op)
+TYPE(cls_queue_enqueue_op)
+TYPE(cls_queue_list_op)
+TYPE(cls_queue_list_ret)
+
+#include "cls/2pc_queue/cls_2pc_queue_ops.h"
+TYPE(cls_2pc_queue_abort_op)
+TYPE(cls_2pc_queue_commit_op)
+TYPE(cls_2pc_queue_expire_op)
+TYPE(cls_2pc_queue_reservations_ret)
+TYPE(cls_2pc_queue_reserve_op)
+TYPE(cls_2pc_queue_reserve_ret)
+
+#include "cls/2pc_queue/cls_2pc_queue_types.h"
+TYPE(cls_2pc_reservation)
+TYPE(cls_2pc_urgent_data)
+
+#include "cls/log/cls_log_types.h"
+TYPE(cls_log_header)
+
+#include "cls/log/cls_log_ops.h"
+TYPE(cls_log_info_op)
+TYPE(cls_log_list_op)
+TYPE(cls_log_list_ret)
+TYPE(cls_log_trim_op)
+
 
 #include "journal/Entry.h"
 TYPE(journal::Entry)
@@ -452,3 +497,58 @@ MESSAGE(MWatchNotify)
 
 #include "messages/MMgrUpdate.h" 
 MESSAGE(MMgrUpdate)
+
+#include "messages/MOSDECSubOpRead.h"
+MESSAGE(MOSDECSubOpRead)
+
+#include "messages/MOSDECSubOpReadReply.h"
+MESSAGE(MOSDECSubOpReadReply)
+
+#include "messages/MOSDECSubOpWrite.h"
+MESSAGE(MOSDECSubOpWrite)
+
+#include "messages/MOSDECSubOpWriteReply.h"
+MESSAGE(MOSDECSubOpWriteReply)
+
+#include "messages/MOSDMarkMeDown.h"
+MESSAGE(MOSDMarkMeDown)
+
+#include "messages/MOSDPGCreated.h"
+MESSAGE(MOSDPGCreated)
+
+#include "messages/MOSDPGPush.h"
+MESSAGE(MOSDPGPush)
+
+#include "messages/MOSDPGPushReply.h"
+MESSAGE(MOSDPGPushReply)
+
+#include "messages/MOSDPGUpdateLogMissing.h"
+MESSAGE(MOSDPGUpdateLogMissing)
+
+#include "messages/MOSDPGUpdateLogMissingReply.h"
+MESSAGE(MOSDPGUpdateLogMissingReply)
+
+#include "messages/MOSDRepOp.h"
+MESSAGE(MOSDRepOp)
+
+#include "messages/MOSDRepOpReply.h"
+MESSAGE(MOSDRepOpReply)
+
+#include "messages/MRecoveryReserve.h"
+MESSAGE(MRecoveryReserve)
+
+
+#include "auth/cephx/CephxProtocol.h"
+TYPE(CephXAuthenticate)
+TYPE(CephXAuthorize)
+TYPE(CephXAuthorizeChallenge)
+TYPE(CephXAuthorizeReply)
+TYPE(CephXChallengeBlob)
+TYPE(CephXRequestHeader)
+TYPE(CephXResponseHeader)
+TYPE(CephXServerChallenge)
+TYPE(CephXServiceTicket)
+TYPE(CephXServiceTicketInfo)
+TYPE(CephXServiceTicketRequest)
+TYPE(CephXTicketBlob)
+
